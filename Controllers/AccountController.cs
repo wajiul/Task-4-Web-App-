@@ -10,6 +10,14 @@ namespace Task_4_Web_App_.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult SignIn(UserLoginModel loginData)
+        {
+            if(!ModelState.IsValid)
+                return View(loginData);
+
+            return View("login successfull");
+        }
         public IActionResult SignUp()
         {
             return View();
