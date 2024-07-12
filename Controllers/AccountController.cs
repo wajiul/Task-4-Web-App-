@@ -23,7 +23,7 @@ namespace Task_4_Web_App_.Controllers
             if(!ModelState.IsValid)
                 return View(loginData);
 
-            var result = await _accountRepository.LoginUserAsync(loginData);
+            var result = await _accountRepository.SignInUserAsync(loginData);
             if(result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");  
@@ -54,6 +54,12 @@ namespace Task_4_Web_App_.Controllers
                 ModelState.AddModelError("", error.Description);
             }
 
+            return RedirectToAction(nameof(SignIn));
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _accountRepository.SignOutAsync();
             return RedirectToAction(nameof(SignIn));
         }
 

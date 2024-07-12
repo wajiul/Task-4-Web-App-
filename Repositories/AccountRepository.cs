@@ -39,12 +39,16 @@ namespace Task_4_Web_App_.Repositories
             return result;
         }
 
-        public async Task<SignInResult> LoginUserAsync(UserLoginModel userCredential)
+        public async Task<SignInResult> SignInUserAsync(UserLoginModel userCredential)
         {
             var result = await _signInManager.PasswordSignInAsync(userCredential.Email, userCredential.Password, false, false);
             return result;
         }
 
+        public async Task SignOutAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
 
     }
 }

@@ -1,0 +1,17 @@
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> _signInManager
+
+
+@if(_signInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        @User.Identity.Name |
+        <a asp-action="Logout" asp-controller="Account">Logout</a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a asp-action="SignIn" asp-controller="Account">Login</a> | 
+        <a asp-action="SignUp" asp-controller="Account">SignUp</a>
+    </li>
+}
