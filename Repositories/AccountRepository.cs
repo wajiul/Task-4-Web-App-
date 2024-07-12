@@ -44,7 +44,15 @@ namespace Task_4_Web_App_.Repositories
             var result = await _signInManager.PasswordSignInAsync(userCredential.Email, userCredential.Password, false, false);
             return result;
         }
-
+        public async Task UpdateLoginTime(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if(user != null)
+            {
+                user.LastLoginTime = DateTime.Now;
+            }
+            _context.SaveChanges();
+        }
         public async Task SignOutAsync()
         {
             await _signInManager.SignOutAsync();

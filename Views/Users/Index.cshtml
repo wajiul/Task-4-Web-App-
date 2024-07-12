@@ -1,0 +1,180 @@
+﻿@{
+    ViewData["Title"] = "Users";
+}
+@model IEnumerable<ApplicationUser>
+
+<div class="container" style="height:80vh;">
+    <div class="mb-4">
+
+        <button class="btn btn-primary" onclick="performAction('block')"> <i class="bi bi-lock-fill"></i> Block</button>
+        <button class="btn btn-outline-secondary ms-2" onclick="performAction('unblock')"><i class="bi bi-unlock-fill"></i></button>
+        <button class="btn btn-danger ms-2" onclick="performAction('delete')"> <i class="bi bi-trash3-fill"></i> </button>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    <input class="form-check-input" type="checkbox" id="selectAll" onclick="toggleSelectAll(this)">
+                </th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Last Login Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody id="userTableBody">
+               
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        fetchUsersAndPopulateTable();
+    });
+
+    function fetchUsersAndPopulateTable() {
+        fetch('/users/getall')
+            .then(response => response.json())
+            .then(data => populateTable(data))
+            .catch(error => console.error('Error fetching users:', error));
+    }
+
+
+    function populateTable(users) {
+        console.log(users);
+
+        const tableBody = document.getElementById('userTableBody');
+        tableBody.innerHTML = '';
+
+        users.forEach(user => {
+            const row = document.createElement('tr');
+
+            const checkboxCell = document.createElement('td');
+            const checkbox = document.createElement('input');
+            checkbox.className = 'form-check-input rowCheckbox';
+            checkbox.type = 'checkbox';
+            checkbox.dataset.userId = user.id;
+            checkboxCell.appendChild(checkbox);
+            row.appendChild(checkboxCell);
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = user.name;
+            row.appendChild(nameCell);
+
+            const emailCell = document.createElement('td');
+            emailCell.textContent = user.email;
+            row.appendChild(emailCell);
+
+            const lastLoginCell = document.createElement('td');
+            lastLoginCell.textContent = user.lastLoginTime;
+            row.appendChild(lastLoginCell);
+
+            const statusCell = document.createElement('td');
+            statusCell.textContent = user.status;
+            row.appendChild(statusCell);
+
+            tableBody.appendChild(row);
+        });
+    }
+
+    function toggleSelectAll(source) {
+        var checkboxes = document.querySelectorAll('.rowCheckbox');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = source.checked;
+        });
+    }
+
+    function uncheckSelectAllBox() {
+        document.getElementById('selectAll').checked = false;
+    }
+
+    function performAction(action) {
+      var selectedCheckboxes = document.querySelectorAll('.rowCheckbox:checked');
+      var selectedIds = [];
+
+      console.log(selectedCheckboxes);
+      selectedCheckboxes.forEach(function(checkbox) {
+        selectedIds.push(checkbox.getAttribute('data-user-id'));
+      });
+
+      if (selectedIds.length === 0) {
+        alert('No users selected');
+        return;
+      }
+
+      switch (action) {
+        case 'block':
+              blockUsers(selectedIds);
+              break;
+
+        case 'unblock':
+              unblockUsers(selectedIds);
+              break;
+        
+          case 'delete':
+              deleteUsers(selectedIds);
+              break;
+
+        default:
+          console.log('Unknown action:', action);
+      }
+    }
+
+    function blockUsers(ids) {
+      console.log(ids);
+
+        fetch('/users/block', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ids)
+        })
+        .then(response => {
+            if (response.status === 401) {
+                 window.location.href = '/Account/Login';
+            }
+        })
+        .then(() => {
+            fetchUsersAndPopulateTable();
+            uncheckSelectAllBox();
+        });
+    }
+
+    function unblockUsers(ids) {
+        fetch('/users/unblock', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ids)
+        }).then(() => {
+            fetchUsersAndPopulateTable();
+            uncheckSelectAllBox();
+        });
+     
+    }
+
+    function deleteUsers(ids) {
+        fetch('/users/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ids)
+        })
+        .then(response => {
+            if (response.status === 401) {
+                window.location.href = '/Account/Login';
+            }
+        })
+        .then(() => {
+            fetchUsersAndPopulateTable();
+            uncheckSelectAllBox();
+        });
+    }
+</script>

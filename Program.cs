@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Task_4_Web_App_.DbContext;
@@ -7,6 +8,12 @@ using Task_4_Web_App_.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login"; // Redirect to login page
+    });
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -17,7 +24,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddTransient<AccountRepository, AccountRepository>();
-
+builder.Services.AddTransient<UserRepository, UserRepository>();
 
 var app = builder.Build();
 
@@ -35,10 +42,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Users}/{action}/{id?}");
 
 app.Run();

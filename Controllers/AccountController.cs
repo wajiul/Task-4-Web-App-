@@ -12,13 +12,13 @@ namespace Task_4_Web_App_.Controllers
         {
             _accountRepository = accountRepository;
         }
-        public IActionResult SignIn()
+
+        public IActionResult Login()
         {
             return View();
         }
-
         [HttpPost]
-        public async Task<IActionResult> SignIn(UserLoginModel loginData)
+        public async Task<IActionResult> Login(UserLoginModel loginData)
         {
             if(!ModelState.IsValid)
                 return View(loginData);
@@ -26,13 +26,15 @@ namespace Task_4_Web_App_.Controllers
             var result = await _accountRepository.SignInUserAsync(loginData);
             if(result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");  
+                await _accountRepository.UpdateLoginTime(loginData.Email);
+                return RedirectToAction("Index", "Users");  
             }
 
             ModelState.AddModelError("", "wrong username / password");
 
             return View(loginData);
         }
+
         public IActionResult SignUp()
         {
             return View();
@@ -54,13 +56,13 @@ namespace Task_4_Web_App_.Controllers
                 ModelState.AddModelError("", error.Description);
             }
 
-            return RedirectToAction(nameof(SignIn));
+            return RedirectToAction(nameof(Login));
         }
 
         public async Task<IActionResult> Logout()
         {
             await _accountRepository.SignOutAsync();
-            return RedirectToAction(nameof(SignIn));
+            return RedirectToAction(nameof(Login));
         }
 
     }
