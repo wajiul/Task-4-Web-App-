@@ -14,16 +14,14 @@ namespace Task_4_Web_App_.Controllers
     [Authorize]
     public class UsersController : Controller
     {
-        public readonly UserRepository _userRepository;
+        public readonly IUserRepository _userRepository;
+        private readonly IAccountRepository _accountRepository;
         public readonly UserManager<ApplicationUser> _userManager;
-        public readonly ApplicationDbContext _context;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        public UsersController(UserRepository userRepository, UserManager<ApplicationUser> userManager, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager)
+        public UsersController(IUserRepository userRepository, UserManager<ApplicationUser> userManager, ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, IAccountRepository accountRepository)
         {
             _userRepository = userRepository;
             _userManager = userManager;
-            _context = context;
-            _signInManager = signInManager;
+            _accountRepository = accountRepository;
         }
         [HttpGet("")]
         public IActionResult Index()
@@ -48,7 +46,7 @@ namespace Task_4_Web_App_.Controllers
 
             if(userIds.Contains(currentUserId))
             {
-                await _signInManager.SignOutAsync();
+                await _accountRepository.SignOutAsync();
                 return Unauthorized();
             }
 
@@ -73,7 +71,7 @@ namespace Task_4_Web_App_.Controllers
 
             if (userIds.Contains(currentUserId))
             {
-                await _signInManager.SignOutAsync();
+                await _accountRepository.SignOutAsync();
                 return Unauthorized();
             }
 

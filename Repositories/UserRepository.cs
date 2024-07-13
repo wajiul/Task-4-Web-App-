@@ -7,7 +7,7 @@ using Task_4_Web_App_.Models;
 
 namespace Task_4_Web_App_.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -19,8 +19,8 @@ namespace Task_4_Web_App_.Repositories
         }
         public IEnumerable<UserInfoDto> GetAllUsers()
         {
-           var appUsers = _userManager.Users;
-           var usersData = new List<UserInfoDto>();
+            var appUsers = _userManager.Users;
+            var usersData = new List<UserInfoDto>();
             foreach (var user in appUsers)
             {
                 usersData.Add(new UserInfoDto
@@ -28,6 +28,7 @@ namespace Task_4_Web_App_.Repositories
                     Id = user.Id,
                     Name = string.Concat(user.FirstName, " ", user.LastName),
                     Email = user.Email,
+                    RegistrationTime = user.RegistrationTime.ToString("yyyy MMMM d H:mm"),
                     LastLoginTime = user.LastLoginTime.ToString("yyyy MMMM d H:mm"),
                     Status = user.Status.ToString()
                 });
@@ -37,7 +38,7 @@ namespace Task_4_Web_App_.Repositories
 
         public async Task BlockUsersAsync(IEnumerable<string> userIds)
         {
-            foreach(var Id in userIds)
+            foreach (var Id in userIds)
             {
                 var user = await _userManager.FindByIdAsync(Id);
                 if (user != null)

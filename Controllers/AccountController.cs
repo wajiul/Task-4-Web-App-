@@ -6,9 +6,9 @@ namespace Task_4_Web_App_.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly AccountRepository _accountRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public AccountController(AccountRepository accountRepository)
+        public AccountController(IAccountRepository accountRepository)
         {
             _accountRepository = accountRepository;
         }

@@ -18,7 +18,7 @@
 
     </div>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>
@@ -32,7 +32,8 @@
                 </th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Last Login Date</th>
+                <th>Last Login Time</th>
+                <th>Registration Time</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -85,6 +86,10 @@
             const lastLoginCell = document.createElement('td');
             lastLoginCell.textContent = user.lastLoginTime;
             row.appendChild(lastLoginCell);
+
+            const RegistrationTimeCell = document.createElement('td');
+            RegistrationTimeCell.textContent = user.registrationTime;
+            row.appendChild(RegistrationTimeCell);
 
             const statusCell = document.createElement('td');
             statusCell.textContent = user.status;
