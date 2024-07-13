@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Task_4_Web_App_.DbContext;
+using Task_4_Web_App_.Enums;
 using Task_4_Web_App_.Models;
 
 namespace Task_4_Web_App_.Repositories
@@ -32,7 +33,7 @@ namespace Task_4_Web_App_.Repositories
                 Email = userData.Email,
                 UserName = userData.Email,
                 RegistrationTime = DateTime.Now,
-                Status = "Active"
+                Status = UserStatus.Active
             };
 
             return await _userManager.CreateAsync(newUser, userData.Password);
@@ -53,7 +54,7 @@ namespace Task_4_Web_App_.Repositories
         public async Task<bool> IsUserBlockedAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return (user != null && user.Status == "Blocked");
+            return (user != null && user.Status == UserStatus.Blocked);
        
         }
         public async Task SignOutAsync()

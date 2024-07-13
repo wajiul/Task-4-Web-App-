@@ -23,19 +23,14 @@ namespace Task_4_Web_App_.Controllers
             if(!ModelState.IsValid)
                 return View(loginData);
 
-            var userBlocked = await _accountRepository.IsUserBlockedAsync(loginData.Email);
-            if(userBlocked)
+            if(await _accountRepository.IsUserBlockedAsync(loginData.Email))
             {
                 ModelState.AddModelError("", "User is blocked");
                 return View(loginData);
             }
 
-            var result = await _accountRepository.SignInUserAsync(loginData);
-            if(result.Succeeded)
+            if(await TrySignInUser(loginData))
             {
-                await _accountRepository.UpdateLoginTime(loginData.Email);
-                await _accountRepository.SaveAsync();
-
                 return RedirectToAction("Index", "Users");  
             }
 
@@ -74,6 +69,17 @@ namespace Task_4_Web_App_.Controllers
             return RedirectToAction(nameof(Login));
         }
 
+        private async Task<bool> TrySignInUser(UserLoginModel loginData)
+        {
+            var result = await _accountRepository.SignInUserAsync(loginData);
+            if (result.Succeeded)
+            {
+                await _accountRepository.UpdateLoginTime(loginData.Email);
+                await _accountRepository.SaveAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }
 

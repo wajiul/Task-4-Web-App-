@@ -1,4 +1,6 @@
-﻿namespace Task_4_Web_App_.DTOs
+﻿using Task_4_Web_App_.Enums;
+
+namespace Task_4_Web_App_.DTOs
 {
     public class UserInfoDto
     {

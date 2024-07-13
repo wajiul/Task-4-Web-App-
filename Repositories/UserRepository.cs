@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Task_4_Web_App_.DbContext;
 using Task_4_Web_App_.DTOs;
+using Task_4_Web_App_.Enums;
 using Task_4_Web_App_.Models;
 
 namespace Task_4_Web_App_.Repositories
@@ -28,7 +29,7 @@ namespace Task_4_Web_App_.Repositories
                     Name = string.Concat(user.FirstName, " ", user.LastName),
                     Email = user.Email,
                     LastLoginTime = user.LastLoginTime.ToString("yyyy MMMM d H:mm"),
-                    Status = user.Status
+                    Status = user.Status.ToString()
                 });
             }
             return usersData;
@@ -41,7 +42,7 @@ namespace Task_4_Web_App_.Repositories
                 var user = await _userManager.FindByIdAsync(Id);
                 if (user != null)
                 {
-                    user.Status = "Blocked";
+                    user.Status = UserStatus.Blocked;
                 }
             }
         }
@@ -52,7 +53,7 @@ namespace Task_4_Web_App_.Repositories
                 var user = await _userManager.FindByIdAsync(Id);
                 if (user != null)
                 {
-                    user.Status = "Active";
+                    user.Status = UserStatus.Active;
                 }
             }
         }
