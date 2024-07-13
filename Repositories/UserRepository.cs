@@ -28,8 +28,8 @@ namespace Task_4_Web_App_.Repositories
                     Id = user.Id,
                     Name = string.Concat(user.FirstName, " ", user.LastName),
                     Email = user.Email,
-                    RegistrationTime = user.RegistrationTime.ToString("yyyy MMMM d H:mm"),
-                    LastLoginTime = user.LastLoginTime.ToString("yyyy MMMM d H:mm"),
+                    RegistrationTime = user.RegistrationTime.ToString("d MMMM, yyyy  hh:mm tt"),
+                    LastLoginTime = user.LastLoginTime.ToString("d MMMM, yyyy  hh:mm tt"),
                     Status = user.Status.ToString()
                 });
             }

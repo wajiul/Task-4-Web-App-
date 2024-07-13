@@ -23,20 +23,17 @@ namespace Task_4_Web_App_.Controllers
             _userManager = userManager;
             _accountRepository = accountRepository;
         }
-        [HttpGet("")]
         public IActionResult Index()
         {
             return View();
         }
-
-        [HttpGet("users/getall")]
         public IActionResult GetUsers()
         {
             var users = _userRepository.GetAllUsers();
             return Ok(users);
         }
 
-        [HttpPost("users/block")]
+        [HttpPost]
         public async Task<IActionResult> BlockUsers([FromBody] List<string> userIds)
         {
             string currentUserId = _userManager.GetUserId(User);
@@ -53,7 +50,7 @@ namespace Task_4_Web_App_.Controllers
             return Ok();
         }
 
-        [HttpPost("users/unblock")]
+        [HttpPost]
         public async Task<IActionResult> UnblockUsers([FromBody] List<string> userIds)
         {
             await _userRepository.UnblockUsersAsync(userIds);
@@ -61,7 +58,7 @@ namespace Task_4_Web_App_.Controllers
             return Ok();
         }
 
-        [HttpPost("users/delete")]
+        [HttpPost]
         public async Task<IActionResult> DeleteUsers([FromBody] List<string> userIds)
         {
             string currentUserId = _userManager.GetUserId(User);
