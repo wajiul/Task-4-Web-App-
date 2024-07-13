@@ -16,8 +16,6 @@ namespace Task_4_Web_App_.Repositories
             _context = context;
             _userManager = userManager;
         }
-
-        
         public IEnumerable<UserInfoDto> GetAllUsers()
         {
            var appUsers = _userManager.Users;
@@ -29,8 +27,8 @@ namespace Task_4_Web_App_.Repositories
                     Id = user.Id,
                     Name = string.Concat(user.FirstName, " ", user.LastName),
                     Email = user.Email,
-                    LastLoginTime = user.LastLoginTime.ToString("yyyy:MM:d H:mm"),
-                    Status = user.Status,
+                    LastLoginTime = user.LastLoginTime.ToString("yyyy MMMM d H:mm"),
+                    Status = user.Status
                 });
             }
             return usersData;
@@ -43,10 +41,9 @@ namespace Task_4_Web_App_.Repositories
                 var user = await _userManager.FindByIdAsync(Id);
                 if (user != null)
                 {
-                    user.Status = "Block";
+                    user.Status = "Blocked";
                 }
             }
-            await _context.SaveChangesAsync();
         }
         public async Task UnblockUsersAsync(IEnumerable<string> userIds)
         {
@@ -58,7 +55,6 @@ namespace Task_4_Web_App_.Repositories
                     user.Status = "Active";
                 }
             }
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteUsersAsync(IEnumerable<string> userIds)
@@ -71,6 +67,10 @@ namespace Task_4_Web_App_.Repositories
                     await _userManager.DeleteAsync(user);
                 }
             }
+        }
+
+        public async Task SaveAsync()
+        {
             await _context.SaveChangesAsync();
         }
     }

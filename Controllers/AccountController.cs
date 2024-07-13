@@ -23,10 +23,19 @@ namespace Task_4_Web_App_.Controllers
             if(!ModelState.IsValid)
                 return View(loginData);
 
+            var userBlocked = await _accountRepository.IsUserBlockedAsync(loginData.Email);
+            if(userBlocked)
+            {
+                ModelState.AddModelError("", "User is blocked");
+                return View(loginData);
+            }
+
             var result = await _accountRepository.SignInUserAsync(loginData);
             if(result.Succeeded)
             {
                 await _accountRepository.UpdateLoginTime(loginData.Email);
+                await _accountRepository.SaveAsync();
+
                 return RedirectToAction("Index", "Users");  
             }
 
@@ -49,14 +58,14 @@ namespace Task_4_Web_App_.Controllers
             var result = await _accountRepository.CreateUserAsync(userData);
 
             if(result.Succeeded)
-                RedirectToAction(nameof(SignIn));
+                return RedirectToAction(nameof(Login));
 
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error.Description);
             }
 
-            return RedirectToAction(nameof(Login));
+            return View(userData);
         }
 
         public async Task<IActionResult> Logout()

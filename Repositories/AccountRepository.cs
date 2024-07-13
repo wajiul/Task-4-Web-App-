@@ -35,14 +35,12 @@ namespace Task_4_Web_App_.Repositories
                 Status = "Active"
             };
 
-            var result = await _userManager.CreateAsync(newUser, userData.Password);
-            return result;
+            return await _userManager.CreateAsync(newUser, userData.Password);
         }
 
         public async Task<SignInResult> SignInUserAsync(UserLoginModel userCredential)
         {
-            var result = await _signInManager.PasswordSignInAsync(userCredential.Email, userCredential.Password, false, false);
-            return result;
+            return await _signInManager.PasswordSignInAsync(userCredential.Email, userCredential.Password, false, false);
         }
         public async Task UpdateLoginTime(string email)
         {
@@ -51,12 +49,21 @@ namespace Task_4_Web_App_.Repositories
             {
                 user.LastLoginTime = DateTime.Now;
             }
-            _context.SaveChanges();
+        }
+        public async Task<bool> IsUserBlockedAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return (user != null && user.Status == "Blocked");
+       
         }
         public async Task SignOutAsync()
         {
             await _signInManager.SignOutAsync();
         }
 
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

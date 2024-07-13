@@ -1,13 +1,13 @@
 ﻿@model UserRegistrationModel
 
-<div class="container" style="height:80vh;">
+<div class="container" style="min-height:80vh;">
 
     <h1 class="text-center mb-4">Sign Up</h1> 
 
     <form method="post" asp-action="SignUp" asp-controller="Account">
 
         <div class="col-md-5 col-12 ms-auto me-auto">   
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating mb-2">
                 <input asp-for="FirstName" class="form-control" id="FirstNameInput" placeholder="Owajeul">
                 <label for="FirstNameInput">First Name</label>
@@ -40,3 +40,9 @@
     </form>
 
 </div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial"></partial>
+    }
+}

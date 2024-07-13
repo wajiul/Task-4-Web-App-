@@ -1,6 +1,6 @@
 ﻿@model UserLoginModel
 
-<div class="container" style="height:80vh;">
+<div class="container" style="min-height:80vh;">
     <h1 class="text-center mb-4">Login</h1>
 
     <form method="post" asp-action="Login" asp-controller="Account">
@@ -22,3 +22,9 @@
     </form>
 
 </div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial"></partial>
+    }
+}

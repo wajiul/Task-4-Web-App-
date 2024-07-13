@@ -44,6 +44,7 @@ namespace Task_4_Web_App_.Controllers
             string currentUserId = _userManager.GetUserId(User);
 
             await _userRepository.BlockUsersAsync(userIds);
+            await _userRepository.SaveAsync();
 
             if(userIds.Contains(currentUserId))
             {
@@ -58,6 +59,7 @@ namespace Task_4_Web_App_.Controllers
         public async Task<IActionResult> UnblockUsers([FromBody] List<string> userIds)
         {
             await _userRepository.UnblockUsersAsync(userIds);
+            await _userRepository.SaveAsync();
             return Ok();
         }
 
@@ -67,6 +69,7 @@ namespace Task_4_Web_App_.Controllers
             string currentUserId = _userManager.GetUserId(User);
 
             await _userRepository.DeleteUsersAsync(userIds);
+            await _userRepository.SaveAsync();
 
             if (userIds.Contains(currentUserId))
             {
