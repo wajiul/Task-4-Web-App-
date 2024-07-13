@@ -2,7 +2,8 @@
 
 @if(_signInManager.IsSignedIn(User))
 {
-    <strong>@User.Identity.Name</strong>
+    <strong>@User.Identity.Name</strong> 
+    <span> | </span>
     <a class="ms-2" asp-action="Logout" asp-controller="Account">Logout</a>
 }
 else

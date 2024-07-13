@@ -90,6 +90,9 @@
             statusCell.textContent = user.status;
             row.appendChild(statusCell);
 
+            if(user.status === 'Blocked') {
+                row.className = 'text-muted';
+            }
             tableBody.appendChild(row);
         });
     }
